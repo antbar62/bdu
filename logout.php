@@ -8,4 +8,4 @@ session_regenerate_id();
 header("Location: ./index.php");
 exit;
 
-?>
+?>   

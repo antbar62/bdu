@@ -1,0 +1,69 @@
+ <html>
+   <head>
+      <title>checking login...</title>
+      <script language="javascript">
+         function login_ok() {
+            
+            window.location="../index.php"
+         }
+         function login_failed() {
+             
+             window.location="login.php"
+          }
+         function attesa() {
+            setTimeout("redirect() ", 5000)
+         }
+      </script>
+   </head>
+
+ <?php
+require_once ("../global/global.php");
+//ini_set("display_errors", 1); 
+//session_start();//per attivare
+// impostazione di connessione al database
+$host=$DB_nomeHost; // Hostname
+$db_username=$DB_utente; // Mysql username
+$db_password=$DB_password; // Mysql password
+$db_name=$DB_nomeDB; //Nome del Database
+$tbl_name="jd_user"; // Nome della Tabella
+
+// Procedimento per connettersi al Database
+mysql_connect("$host", "$db_username", "$db_password")or die("cannot connect");
+mysql_select_db("$db_name")or die("cannot select DB"); 
+
+// Nome utente e password inviate attraverso il form
+$myusername=$_POST['myusername'];
+$mypassword=$_POST['mypassword'];
+$sql="SELECT * FROM $tbl_name WHERE user='$myusername' and password='$mypassword'";
+
+//print($sql);
+$result=mysql_query($sql);
+
+// Mysql_num_row is counting table row
+$count=mysql_num_rows($result);
+
+// If result matched $myusername and $mypassword, table row must be 1 row
+if($count==1){
+	// Register $myusername, $mypassword and redirect to file "login_success.php"
+	session_register("myusername");
+	//$_SESSION['myusername'] = $myusername;
+	
+	session_register("mypassword");
+	//$_SESSION['mypassword'] = $mypassword;
+	
+	?>
+	<body onload="javascript:login_ok();">
+      Login effettuato!!!
+   </body>
+	
+<?php	
+}
+else {
+	?>
+	<body onload="javascript:login_failed();">
+      Attenzione username o password errati
+   </body>
+<?php		
+}
+?>
+</html>
